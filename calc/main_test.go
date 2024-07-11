@@ -88,12 +88,11 @@ func TestNewHandler(t *testing.T) {
 		want    *Handler
 	}{
 		{
-			name: "zeros",
+			name: "double",
 			args: args{
-				a: 0,
-				b: 0,
+				calculator: 5, 5,
 			},
-			want: 0,
+			wantOut: "10",
 		}, // TODO: Add test cases.
 	}
 	for _, tt := range tests {
