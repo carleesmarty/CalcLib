@@ -2,7 +2,6 @@ package main
 
 import (
 	"bytes"
-	"io"
 	"reflect"
 	"testing"
 
@@ -48,63 +47,53 @@ func TestAddition(t *testing.T) {
 	}
 }
 
-func TestHandler_Handle(t *testing.T) {
-	type fields struct {
-		calculator CalcLib.Calculator
-		out        io.Writer
+func TestHandlerHappyPath(t *testing.T) {
+	calculator := &fakeCalculator{output: 42}
+	buffer := &bytes.Buffer{}
+	handler := NewHandler(calculator, buffer)
+
+	err := handler.Handle([]string{"", "1", "4"})
+
+	if err != nil {
+		t.Error(err)
 	}
-	type args struct {
-		args []string
+	if !reflect.DeepEqual(calculator.inputs, []int{1, 4}) {
+		t.Errorf("Incorrect inputs: %v", calculator.inputs)
 	}
-	tests := []struct {
-		name    string
-		fields  fields
-		args    args
-		wantErr bool
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			h := &Handler{
-				calculator: tt.fields.calculator,
-				out:        tt.fields.out,
-			}
-			if err := h.Handle(tt.args.args); (err != nil) != tt.wantErr {
-				t.Errorf("Handle() error = %v, wantErr %v", err, tt.wantErr)
-			}
-		})
+	if buffer.String() != "42" {
+		t.Errorf("Incorrect outputs: %s", buffer.String())
 	}
 }
 
-func TestNewHandler(t *testing.T) {
-	type args struct {
-		calculator CalcLib.Calculator
+func TestHandlerArgumentsFail(t *testing.T) {
+
+	calculator := &fakeCalculator{output: 42}
+	buffer := &bytes.Buffer{}
+	handler := NewHandler(calculator, buffer)
+
+	err := handler.Handle([]string{"", "1"})
+	if err == nil {
+		t.Errorf("Incorrect inputs: %v", calculator.inputs)
 	}
-	tests := []struct {
-		name    string
-		args    args
-		wantOut string
-		want    *Handler
-	}{
-		{
-			name: "double",
-			args: args{
-				calculator: 5, 5,
-			},
-			wantOut: "10",
-		}, // TODO: Add test cases.
+}
+
+func TestHandlerArgumentsPass(t *testing.T) {
+	calculator := &fakeCalculator{output: 42}
+	buffer := &bytes.Buffer{}
+	handler := NewHandler(calculator, buffer)
+
+	err := handler.Handle([]string{"", "1", "3"})
+	if err != nil {
+		t.Error(err)
 	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			out := &bytes.Buffer{}
-			got := NewHandler(tt.args.calculator, out)
-			if gotOut := out.String(); gotOut != tt.wantOut {
-				t.Errorf("NewHandler() gotOut = %v, want %v", gotOut, tt.wantOut)
-			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("NewHandler() = %v, want %v", got, tt.want)
-			}
-		})
-	}
+}
+
+type fakeCalculator struct {
+	inputs []int
+	output int
+}
+
+func (f *fakeCalculator) Calculate(a, b int) int {
+	f.inputs = append(f.inputs, a, b)
+	return f.output
 }
