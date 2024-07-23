@@ -1,6 +1,4 @@
-package CalcLib
-
-type Calculator interface{ Calculate(a, b int) int }
+package Addition
 
 type Addition struct {
 }
