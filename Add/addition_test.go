@@ -1,31 +1,41 @@
-package Subtraction
+package Add
 
 import (
 	"testing"
 )
 
-func TestSubtraction(t *testing.T) {
+func TestAddition(t *testing.T) {
 	type args struct {
-		a int
-		b int
+		a float64
+		b float64
 	}
 	tests := []struct {
 		name string
 		args args
-		want int
+		want float64
 	}{
+		{
+			name: "zeros",
+			args: args{
+				a: 0,
+				b: 0,
+			},
+			want: 0,
+		},
+
 		{
 			name: "negative",
 			args: args{
 				a: -1,
-				b: 2,
+				b: 0,
 			},
-			want: -3,
+			want: -1,
 		},
+		// TODO: Add test cases.
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			a2 := Subtraction.Subtraction{}
+			a2 := Addition{}
 			if got := a2.Calculate(tt.args.a, tt.args.b); got != tt.want {
 				t.Errorf("Calculate() = %v, want %v", got, tt.want)
 			}

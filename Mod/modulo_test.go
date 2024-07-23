@@ -1,10 +1,8 @@
-package Addition
+package Mod
 
-import (
-	"testing"
-)
+import "testing"
 
-func TestAddition(t *testing.T) {
+func TestModulo_Calculate(t *testing.T) {
 	type args struct {
 		a int
 		b int
@@ -12,30 +10,28 @@ func TestAddition(t *testing.T) {
 	tests := []struct {
 		name string
 		args args
-		want int
+		want float64
 	}{
 		{
-			name: "zeros",
+			name: "mod",
 			args: args{
-				a: 0,
-				b: 0,
+				a: 8,
+				b: 3,
 			},
-			want: 0,
+			want: 2,
 		},
-
 		{
 			name: "negative",
 			args: args{
-				a: -1,
-				b: 0,
+				a: 6,
+				b: -4,
 			},
-			want: -1,
-		},
-		// TODO: Add test cases.
+			want: 2,
+		}, // TODO: Add test cases.
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			a2 := Addition.Addition{}
+			a2 := Modulo{}
 			if got := a2.Calculate(tt.args.a, tt.args.b); got != tt.want {
 				t.Errorf("Calculate() = %v, want %v", got, tt.want)
 			}
