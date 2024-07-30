@@ -2,7 +2,7 @@ package Mod
 
 type Modulo struct{}
 
-func (a2 Modulo) Calculate(a, b int) float64 {
+func (a2 Modulo) Calculate(a, b float64) float64 {
 
-	return float64(a % b)
+	return float64(int(a) % int(b))
 }
